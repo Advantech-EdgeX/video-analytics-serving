@@ -10,7 +10,7 @@ SAMPLES_DIR=$(dirname $SCRIPT_DIR)
 ROOT_DIR=$(dirname $SAMPLES_DIR)
 
 PIPELINE=object_detection/record_frames
-MEDIA=https://github.com/intel-iot-devkit/sample-videos/blob/master/person-bicycle-car-detection.mp4?raw=true
+MEDIA=rtsp://admin:admin@172.22.24.214/multimedia/video1
 BROKER_ADDR=localhost
 BROKER_PORT=1883
 TOPIC=vaserving
@@ -41,8 +41,9 @@ fi
 
 FILE_LOCATION=$FRAME_STORE/$SPECIFIER.jpg
 $ROOT_DIR/vaclient/vaclient.sh start $PIPELINE $MEDIA \
+   --rtsp-path vaserving \
    --destination type mqtt --destination host $BROKER_ADDR:$BROKER_PORT --destination topic $TOPIC \
    --parameter file-location $FILE_LOCATION
 echo Frame store file location = $FILE_LOCATION
 echo Starting mqtt client
-python3 $SCRIPT_DIR/mqtt_client.py --broker-address $BROKER_ADDR --broker-port $BROKER_PORT --topic $TOPIC --frame-store-template $FILE_LOCATION
+python3 $SCRIPT_DIR/mqtt_client.py --broker-address $BROKER_ADDR --broker-port $BROKER_PORT --frame-store-template $FILE_LOCATION

@@ -1,7 +1,7 @@
 {
     "type": "FFmpeg",
     "template": [
-        "-i \"{source[uri]}\" ",
+        "-i \"{source[v4l2src]}\" ",
         "-vf \"detect=model={models[object_detection][person_vehicle_bike][network]}",
         ":model_proc=\"{models[object_detection][person_vehicle_bike][proc]}\":interval={parameters[inference-interval]}\",",
         "metaconvert",

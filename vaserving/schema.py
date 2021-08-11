@@ -34,25 +34,25 @@ source = {
         },
         "required":["type", "class"]
     },
-    "uri": {
+    "v4l2src": {
         "type": "object",
         "properties": {
             "type": {
                 "type": "string",
-                "enum": ["uri"]
+                "enum": ["v4l2src"]
             },
-            "uri": {
+            "v4l2src": {
                 "type": "string",
-                "format": "uri",
+                "format": "v4l2src",
                 "filter": [{"name": "metaconvert", "property": "source", "type": "video"},
                            {"name": "i", "property": "_INPUT_ARG_", "type": "input"}],
                 "element": [{"name": "source",
-                             "property": "uri"},
+                             "property": "v4l2src"},
                             {"name": "source",
                              "property": "location"},
                             {"name": "metaconvert", "property": "source"}]}
         },
-        "required": ["type", "uri"]
+        "required": ["type", "v4l2src"]
     },
     "path": {
         "type": "object",
@@ -80,7 +80,7 @@ source = {
     },
     "oneOf": [
         {
-            "$ref": "#/uri"
+            "$ref": "#/v4l2src"
         },
         {
             "$ref": "#/path"

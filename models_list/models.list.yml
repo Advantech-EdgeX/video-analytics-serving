@@ -27,3 +27,7 @@
   alias: action_recognition
   version: encoder
   precision: [FP16,FP32]
+- model: person-detection-0202
+  alias: object_detection
+  version: person-detection-0202
+  precision: [FP16,FP32]
