@@ -14,7 +14,7 @@ import requests
 from results_watcher import ResultsWatcher
 from vaserving.pipeline import Pipeline
 
-SERVER_ADDRESS = "http://localhost:8080/"
+SERVER_ADDRESS = "http://localhost:7878/"
 RESPONSE_SUCCESS = 200
 TIMEOUT = 30
 SLEEP_FOR_STATUS = 0.5

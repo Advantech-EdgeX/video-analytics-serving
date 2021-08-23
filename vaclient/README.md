@@ -127,7 +127,7 @@ All vaclient commands can be used with the `--show-request` option which will pr
 ```
 ~/video-analytics-serving$ ./vaclient/vaclient.sh run object_detection/person_vehicle_bike https://github.com/intel-iot-devkit/sample-videos/blob/master/person-bicycle-car-detection.mp4?raw=true --show-request
 <snip>
-POST http://localhost:8080/pipelines/object_detection/person_vehicle_bike
+POST http://localhost:7878/pipelines/object_detection/person_vehicle_bike
 Body:{'source': {'uri': 'https://github.com/intel-iot-devkit/sample-videos/blob/master/person-bicycle-car-detection.mp4?raw=true', 'type': 'uri'}, 'destination': {'metadata': {'type': 'file', 'path': '/tmp/results.jsonl', 'format': 'json-lines'}}}
 ```
 
@@ -135,12 +135,12 @@ Body:{'source': {'uri': 'https://github.com/intel-iot-devkit/sample-videos/blob/
 ```
 ~/video-analytics-serving$ ./vaclient/vaclient.sh stop object_detection/person_vehicle_bike 1 --show-request
 <snip>
-DELETE http://localhost:8080/pipelines/object_detection/person_vehicle_bike/1
+DELETE http://localhost:7878/pipelines/object_detection/person_vehicle_bike/1
 ```
 
 #### Status:
 ```
 ~/video-analytics-serving$ ./vaclient/vaclient.sh status object_detection/person_vehicle_bike 1 --show-request
 <snip>
-GET http://localhost:8080/pipelines/object_detection/person_vehicle_bike/1/status
+GET http://localhost:7878/pipelines/object_detection/person_vehicle_bike/1/status
 ```

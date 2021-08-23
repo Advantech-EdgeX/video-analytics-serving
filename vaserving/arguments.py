@@ -14,7 +14,7 @@ def parse_options(args=None):
     parser = argparse.ArgumentParser(fromfile_prefix_chars='@',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("--port", action="store", type=int,
-                        dest="port", default=int(os.getenv('PORT', '8080')))
+                        dest="port", default=int(os.getenv('PORT', '7878')))
     parser.add_argument("--framework", action="store", dest="framework",
                         choices=['gstreamer', 'ffmpeg'],
                         default=os.getenv('FRAMEWORK', 'gstreamer'))

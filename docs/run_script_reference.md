@@ -30,7 +30,7 @@ In the following description, `$source_dir` refers to the root project folder an
 The container runs in one of two modes, `service` (default) or `developer`. Service mode configures the environment as follows:
 * pipeline and model folder paths are volume mounted if specified
 * container has access to the host's GPU (/dev/dri)
-* port 8080 is used for service communication
+* port 7878 is used for service communication
 
 Developer mode is covered in a later section.
 

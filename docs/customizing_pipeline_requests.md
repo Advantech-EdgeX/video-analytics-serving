@@ -42,7 +42,7 @@ Some of the common video sources are:
 ### File Source
 The example request shown in above section has media `source` from a video file checked in github. With the service running, you can use curl command line program to start an object detection pipeline with video source from a video file as follows:
 ```bash
-$ curl localhost:8080/pipelines/object_detection/person_vehicle_bike -X POST -H 'Content-Type: application/json' -d '{ "source": { "uri": "https://github.com/intel-iot-devkit/sample-videos/blob/master/person-bicycle-car-detection.mp4?raw=true", "type": "uri" }, "destination": { "type": "file", "path": "/tmp/results.txt", "format":"json-lines"}}'
+$ curl localhost:7878/pipelines/object_detection/person_vehicle_bike -X POST -H 'Content-Type: application/json' -d '{ "source": { "uri": "https://github.com/intel-iot-devkit/sample-videos/blob/master/person-bicycle-car-detection.mp4?raw=true", "type": "uri" }, "destination": { "type": "file", "path": "/tmp/results.txt", "format":"json-lines"}}'
 2
 ```
 The number returned on the console is the pipeline instance id (e.g. 2).

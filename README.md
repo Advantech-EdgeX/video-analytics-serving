@@ -85,7 +85,7 @@ Start the sample microservice with the following command:
 ```
 
 This script issues a standard docker run command to launch the
-container, run a Tornado based web service on port 8080, and mount the
+container, run a Tornado based web service on port 7878, and mount the
 `/tmp` folder. The `/tmp` folder is mounted to share sample
 results with the host and is optional in actual deployments.
 
@@ -104,7 +104,7 @@ Expected output:
 {"levelname": "INFO", "asctime": "2021-04-05 23:43:43,109", "message": "===========================", "module": "pipeline_manager"}
 {"levelname": "INFO", "asctime": "2021-04-05 23:43:43,109", "message": "Completed Loading Pipelines", "module": "pipeline_manager"}
 {"levelname": "INFO", "asctime": "2021-04-05 23:43:43,109", "message": "===========================", "module": "pipeline_manager"}
-{"levelname": "INFO", "asctime": "2021-04-05 23:43:43,217", "message": "Starting Tornado Server on port: 8080", "module": "__main__"}
+{"levelname": "INFO", "asctime": "2021-04-05 23:43:43,217", "message": "Starting Tornado Server on port: 7878", "module": "__main__"}
 ```
 
 ## Running a Pipeline
@@ -286,12 +286,12 @@ Let's repeat the previous GPU inference example, adding RTSP output and show the
 ```
 $ ./vaclient/vaclient.sh run object_classification/vehicle_attributes https://github.com/intel-iot-devkit/sample-videos/blob/master/car-detection.mp4?raw=true --parameter detection-device GPU --rtsp-path vaserving --show-request
 <snip>
-POST http://localhost:8080/pipelines/object_classification/vehicle_attributes
+POST http://localhost:7878/pipelines/object_classification/vehicle_attributes
 Body:{'source': {'uri': 'https://github.com/intel-iot-devkit/sample-videos/blob/master/car-detection.mp4?raw=true', 'type': 'uri'}, 'destination': {'metadata': {'type': 'file', 'path': '/tmp/results.jsonl', 'format': 'json-lines'}, 'frame': {'type': 'rtsp', 'path': 'vaserving'}}, 'parameters': {'detection-device': 'GPU'}}
 ```
 The REST request is broken into three parts
 1. VERB: `POST`
-1. URI: `http://localhost:8080/pipelines/object_classification/vehicle_attributes`
+1. URI: `http://localhost:7878/pipelines/object_classification/vehicle_attributes`
 2. BODY: `{"source": {"uri": ...`
 
 The uri is easy to decode. It's the service address, `pipelines` command and the pipeline tuplet. The body contains three components:
@@ -334,7 +334,7 @@ $ curl <URI> -X <VERB> -H "Content-Type: application/json' -d <BODY>
 ```
 So the above request would be as below. Note the pipeline instance `1` returned by the request.
 ```bash
-$ curl localhost:8080/pipelines/object_classification/vehicle_attributes -X POST -H \
+$ curl localhost:7878/pipelines/object_classification/vehicle_attributes -X POST -H \
 'Content-Type: application/json' -d \
 '{
   "source": {
