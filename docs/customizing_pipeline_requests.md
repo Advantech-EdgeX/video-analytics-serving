@@ -68,7 +68,7 @@ Some of the common video sources are:
 The following example shows a media `source` from a video file in GitHub:
 
 ```bash
-curl localhost:8080/pipelines/object_detection/person_vehicle_bike -X POST -H \
+curl localhost:7878/pipelines/object_detection/person_vehicle_bike -X POST -H \
 'Content-Type: application/json' -d \
 '{
     "source": {

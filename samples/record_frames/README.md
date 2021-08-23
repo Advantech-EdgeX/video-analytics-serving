@@ -116,7 +116,7 @@ Start the pipeline
 * Specify the frame store file specifier (via the file-location parameter).
 * Request would look like this in curl format assume pipeline is `object_detection/record_frames`
 ```
-$ curl localhost:8080/pipelines/object_detection/record_frames -X POST -H \
+$ curl localhost:7878/pipelines/object_detection/record_frames -X POST -H \
 'Content-Type: application/json' -d \
 '{
   "source": {

@@ -2,7 +2,7 @@
 | [Video Analytics Serving Microservice](#video-analytics-serving-microservice) | [Interacting with the Microservice](#interacting-with-the-microservice) | [Real Time Streaming Protocol (RTSP) Re-streaming](#real-time-streaming-protocol-rtsp-re-streaming) | [Selecting Pipelines and Models at Runtime](#selecting-pipelines-and-models-at-runtime) | [Developer Mode](#developer-mode) | [Enabling Hardware Accelerators](#enabling-hardware-accelerators) |
 
 Video Analytics Serving docker images can be started using standard `docker run` and `docker compose` commands. For convenience a simplified run script is provided to pass common options to `docker
-run` such as proxies, device mounts, and to expose the default microservice port (8080).
+run` such as proxies, device mounts, and to expose the default microservice port (7878).
 
 The following sections give an overview of the way the
 image is run as well as common customization and interaction patterns.
@@ -15,7 +15,7 @@ image is run as well as common customization and interaction patterns.
 
 The default image of Video Analytics Serving includes a microservice
 that exposes a RESTful interface on port
-8080.  The microservice has endpoints to list, start, stop, and get
+7878.  The microservice has endpoints to list, start, stop, and get
 the status of media analytics pipelines.
 
 ## Microservice Endpoints
@@ -34,7 +34,7 @@ the status of media analytics pipelines.
 
 | Command | Media Analytics Base Image | Image Name | Description |
 | ---     | ---        | --- | ----        |
-| `./docker/run.sh`|**DL Streamer** docker [file](https://github.com/opencv/gst-video-analytics/blob/preview/audio-detect/docker/Dockerfile) |`video-analytics-serving-gstreamer` | DL Streamer based microservice with default pipeline definitions and deep learning models. Exposes port 8080. Mounts the host system's graphics devices. |
+| `./docker/run.sh`|**DL Streamer** docker [file](https://github.com/opencv/gst-video-analytics/blob/preview/audio-detect/docker/Dockerfile) |`video-analytics-serving-gstreamer` | DL Streamer based microservice with default pipeline definitions and deep learning models. Exposes port 7878. Mounts the host system's graphics devices. |
 | `./docker/run.sh --framework ffmpeg`| **FFmpeg Video Analytics** docker [file](https://github.com/VCDP/FFmpeg-patch/blob/ffmpeg4.2_va/docker/Dockerfile.source) |`video-analytics-serving-ffmpeg`| FFmpeg Video Analytics based microservice with default pipeline definitions and deep learning models. Mounts the graphics devices. |
 
 
@@ -51,7 +51,7 @@ based image or the `FFmpeg` based image.
 > Images](../docs/building_video_analytics_serving.md)
 
 > **Note:** Both the `DL Streamer` based microservice and the `FFmpeg`
-> based microservice use the same default port: `8080` and only one
+> based microservice use the same default port: `7878` and only one
 > can be started at a time. To change the port please see the command
 > line options for the Video Analytics Serving microservice.
 >
@@ -83,7 +83,7 @@ microservice.
 **Example:**
 > **Note:** In this example we assume you are running FFmpeg Video Analytics based Microservice
 ```bash
-$ curl localhost:8080/pipelines
+$ curl localhost:7878/pipelines
 [
   {
     "description": "Object Detection Pipeline",
@@ -106,7 +106,7 @@ $ curl localhost:8080/pipelines
 **Example:**
 > **Note:** In this example we assume you are running DL Streamer based Microservice
 ```bash
-curl localhost:8080/pipelines/object_detection/person_vehicle_bike -X POST -H \
+curl localhost:7878/pipelines/object_detection/person_vehicle_bike -X POST -H \
 'Content-Type: application/json' -d \
 '{
   "source": {
@@ -162,7 +162,7 @@ $ docker/run.sh --enable-rtsp
 
 *  Start a pipeline with curl request with frame destination set as rtsp and custom path set. For demonstration, path set as `person-detection` in example request below.
 ```bash
-curl localhost:8080/pipelines/object_detection/person_vehicle_bike -X POST -H \
+curl localhost:7878/pipelines/object_detection/person_vehicle_bike -X POST -H \
 'Content-Type: application/json' -d \
 '{
   "source": {

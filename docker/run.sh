@@ -300,7 +300,7 @@ if [ "${MODE}" == "DEV" ]; then
     PRIVILEGED="--privileged "
 elif [ "${MODE}" == "SERVICE" ]; then
     if [ -z "$PORTS" ]; then
-        PORTS+="-p 8080:8080 "
+        PORTS+="-p 7878:7878 "
     fi
     enable_hardware_access
 else
