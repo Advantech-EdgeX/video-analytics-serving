@@ -13,6 +13,8 @@ from PIL import Image
 import base64,io
 import os
 import time
+import subprocess
+# import shlex
 
 vas_mqtt_topic = "vaserving"
 file_location = "host-file-location"
@@ -23,6 +25,7 @@ intrude_ti_us = 5000000000
 debug = 1
 wait_sec_record_frame = (100000/1000000.0)
 confidence_threshold_default=0.530
+send_image_script_name = "img_send.sh"
 
 def to_base64(img):
     return base64.b64encode(img).decode('ascii')
@@ -42,6 +45,16 @@ def img_process(img_file, txt_file):
 
     f = open(txt_file, "w")
     f.write(encode);
+    return
+
+def img_send(txt_file):
+    # print('getcwd:      ', os.getcwd())
+    # print('__file__:    ', __file__)
+    # print('basename:    ', os.path.basename(__file__))
+    # print('dirname:     ', os.path.dirname(__file__))
+    ret = subprocess.call(['sh', os.path.dirname(__file__)+'/'+send_image_script_name, str(txt_file)])
+    # subprocess.call(shlex.split('/home/ei52/img_send.sh txt_file'))
+    print('Send image return code:   ', ret)
     return
 
 def on_connect(client, user_data, _unused_flags, return_code):
@@ -83,6 +96,8 @@ def on_message(_unused_client, user_data, msg):
                         client_pub = mqtt.Client("P1")
                         client_pub.connect(args.broker_address, args.broker_port)
                         client_pub.publish(args.topic, msg.payload)
+
+                        img_send(frame_path + ".txt")
                     elif debug > 0:
                         print("frame_path not exist {}".format(frame_path))
                 elif debug > 1:
