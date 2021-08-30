@@ -26,7 +26,6 @@ DEVICE_CGROUP_RULE=
 USER_GROUPS=
 ENABLE_RTSP=
 RTSP_PORT=8554
-DETACHED="-d"
 
 SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
 SOURCE_DIR=$(dirname $SCRIPT_DIR)
@@ -71,6 +70,7 @@ show_help() {
   echo "  [--enable-rtsp To enable rtsp re-streaming]"
   echo "  [--rtsp-port Specify the port to use for rtsp re-streaming]"
   echo "  [--dev run in developer mode]"
+  echo "  [--detach run the container in the background in a detached mode]"
   exit 0
 }
 
@@ -250,6 +250,9 @@ while [[ "$#" -gt 0 ]]; do
         ;;
     --non-interactive)
         unset INTERACTIVE
+        ;;
+    --detach)
+        DETACHED="-d"
         ;;
     --) # End of all options.
         shift
