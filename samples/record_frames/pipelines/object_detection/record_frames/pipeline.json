@@ -1,6 +1,6 @@
 {
 	"type": "GStreamer",
-	"template": ["v4l2src name=source ! decodebin ! video/x-raw",
+	"template": ["v4l2src name=source ! videoscale ! video/x-raw,width=1920,height=1080",
 				" ! videoconvert name=videoconvert",
 				" ! gvadetect model={models[object_detection][person_vehicle_bike][network]} name=detection",
 				" ! tee name=t ! queue",
