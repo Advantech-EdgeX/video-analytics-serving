@@ -16,9 +16,23 @@ import time
 import subprocess
 # import shlex
 
+# person-vehicle-bike-detection-crossroad-1016 inference output example
+#{'detection':
+# {'bounding_box':
+#   {'x_max': 0.49997948110103607,
+#    'x_min': 0.22809933125972748,
+#    'y_max': 0.6331898421049118,
+#    'y_min': 0.24341611564159393},
+#    'confidence': 0.53 11868786811829,
+#    'label_id': 2},
+#  'h': 421, 'w': 522, 'x': 438, 'y': 263}
+#
+# Outputs
+# label_id - predicted class ID (0 - non-vehicle, 1 - vehicle, 2 - person)
+
 vas_mqtt_topic = "vaserving"
 file_location = "host-file-location"
-object_type = "person"
+object_type = 2
 scale = 0.3
 intrude_ts = 0
 intrude_ti_us = 5000000000
@@ -72,7 +86,7 @@ def on_connect(client, user_data, _unused_flags, return_code):
 
 def on_message(_unused_client, user_data, msg):
     global intrude_ts
-    if debug > 4:
+    if debug > 99:
         print("on_message() called")
     result = json.loads(msg.payload)
     if not "frame_id" in result:
@@ -80,7 +94,9 @@ def on_message(_unused_client, user_data, msg):
         return
     objects = result.get("objects", [])
     for obj in objects:
-        if obj["roi_type"] == object_type:
+        if debug > 4:
+            print("{}".format(obj))
+        if obj["detection"]["label_id"] == object_type:
             args = user_data
             if obj["detection"]["confidence"] > args.confidence_threshold:
                 frame_path = args.frame_store_template % result["frame_id"]
@@ -89,7 +105,7 @@ def on_message(_unused_client, user_data, msg):
                 if intrude_ts == 0 or result["timestamp"] - intrude_ts > intrude_ti_us:
                     time.sleep(wait_sec_record_frame)
                     if os.path.isfile(frame_path):
-                        print("frame_id={:<8d}, timestamp={:<13d}, confidence={:.3f}, detected {}".format(result["frame_id"], result["timestamp"], obj["detection"]["confidence"], object_type))
+                        print("frame_id={:<8d}, timestamp={:<13d}, confidence={:.3f}, label_id {}".format(result["frame_id"], result["timestamp"], obj["detection"]["confidence"], object_type))
                         print("Frame path: {}".format(frame_path))
                         img_process(frame_path, frame_path + ".txt")
 
@@ -101,15 +117,15 @@ def on_message(_unused_client, user_data, msg):
                     elif debug > 0:
                         print("frame_path not exist {}".format(frame_path))
                 elif debug > 1:
-                    print("frame_id={:<8d}, timestamp={:<13d}, confidence={:.3f}, roi_type={}, intrude_ts={}, timestamp={}".format(result["frame_id"], result["timestamp"], obj["detection"]["confidence"], obj["roi_type"], intrude_ts, result["timestamp"]))
+                    print("frame_id={:<8d}, timestamp={:<13d}, confidence={:.3f}, label_id={}, intrude_ts={}, timestamp={}".format(result["frame_id"], result["timestamp"], obj["detection"]["confidence"], obj["detection"]["label_id"], intrude_ts, result["timestamp"]))
                 if debug > 4:
                     print("timestamp={}, ts={}".format(result["timestamp"], intrude_ts))
                 # record frame successfully, then update intrude timestamp
                 intrude_ts = result["timestamp"]
             elif debug > 2:
-                print("frame_id={:<8d}, timestamp={:<13d}, confidence={:.3f}, roi_type={}".format(result["frame_id"], result["timestamp"], obj["detection"]["confidence"], obj["roi_type"]))
+                print("frame_id={:<8d}, timestamp={:<13d}, confidence={:.3f}, label_id={}".format(result["frame_id"], result["timestamp"], obj["detection"]["confidence"], obj["detection"]["label_id"]))
         elif debug > 3:
-            print("frame_id={:<8d}, timestamp={:<13d}, confidence={:.3f}, roi_type={}".format(result["frame_id"], result["timestamp"], obj["detection"]["confidence"], obj["roi_type"]))
+            print("frame_id={:<8d}, timestamp={:<13d}, confidence={:.3f}, label_id={}".format(result["frame_id"], result["timestamp"], obj["detection"]["confidence"], obj["detection"]["label_id"]))
 
 def get_arguments():
     """Process command line options"""
