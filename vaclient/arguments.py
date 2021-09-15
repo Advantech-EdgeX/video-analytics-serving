@@ -44,7 +44,7 @@ def parse_args(program_name="Video Analytics Serving Client"):
     parser_run.set_defaults(command=vaclient.run)
     parser_run.add_argument('pipeline', type=str, help='Vaserving pipeline which to run instance of. \
         In the form of pipeline_name/pipeline_version')
-    parser_run.add_argument('v4l2src', type=str, help='Location of the content to play/analyze')
+    parser_run.add_argument('uri', type=str, help='Location of the content to play/analyze')
     parser_run.add_argument('--destination', action='append', nargs=2, metavar=('key', 'value'), type=str, \
         help='Update destination information with key and value pair')
     parser_run.add_argument('--rtsp-path', type=str, help='RTSP endpoint path')
@@ -60,7 +60,7 @@ def parse_args(program_name="Video Analytics Serving Client"):
     parser_start.set_defaults(command=vaclient.start)
     parser_start.add_argument('pipeline', type=str, help='Vaserving pipeline which to run instance of. \
         In the form of pipeline_name/pipeline_version')
-    parser_start.add_argument('v4l2src', type=str, help='Location of the content to play/analyze')
+    parser_start.add_argument('uri', type=str, help='Location of the content to play/analyze')
     parser_start.add_argument('--destination', action='append', nargs=2, metavar=('key', 'value'), type=str, \
         help='Update destination information with key and value pair')
     parser_start.add_argument('--rtsp-path', type=str, help='RTSP endpoint path')

@@ -22,8 +22,8 @@ WATCHER_POLL_TIME = 0.01
 #nosec skips pybandit hits
 REQUEST_TEMPLATE = {
     "source": {
-        "v4l2src": "",
-        "type": "v4l2src"
+        "uri": "",
+        "type": "uri"
     },
     "destination": {
         "metadata": {
@@ -112,8 +112,8 @@ def list_models(args):
 
 def update_request_options(request,
                            args):
-    if hasattr(args, 'v4l2src'):
-        request["source"]["v4l2src"] = args.v4l2src
+    if hasattr(args, 'uri'):
+        request["source"]["uri"] = args.uri
     if hasattr(args, 'destination') and args.destination:
         request['destination']['metadata'].update(args.destination)
     if hasattr(args, 'parameters') and args.parameters:

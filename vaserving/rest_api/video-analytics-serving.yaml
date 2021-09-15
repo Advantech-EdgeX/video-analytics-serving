@@ -275,14 +275,14 @@ components:
       properties:
         type:
           enum:
-          - v4l2src
+          - uri
           type: string
-        v4l2src:
-          format: v4l2src
+        uri:
+          format: uri
           type: string
       required:
       - type
-      - v4l2src
+      - uri
       type: object
     DeviceSource:
       properties:
@@ -379,8 +379,8 @@ components:
     PipelineRequest:
       example:
         source:
-          type: v4l2src
-          v4l2src: /dev/video0
+          type: uri
+          uri: file:///root/video-examples/example.mp4
         parameters: {}
         tags: {}
       properties:
