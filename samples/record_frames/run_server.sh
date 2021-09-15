@@ -21,6 +21,42 @@ while [[ "$#" -gt 0 ]]; do
         exit 1
       fi
       ;;
+    --pipeline)
+      if [ "$2" ]; then
+        PIPELINE_FILE=$(readlink -f "$2")
+        shift
+      else
+        echo "--pipeline expects a value"
+        exit 1
+      fi
+      ;;
+    --src-webcam)
+      if [ -f "$PIPELINE_FILE" ]; then
+        sed -i 's/.*\"template\":.*/\"template\": [\"v4l2src name=source\",/g' $PIPELINE_FILE
+      else
+        echo "--src-webcam expects pipeline file given first"
+        exit 1
+      fi
+      ;;
+    --src-ipcam)
+      if [ -f "$PIPELINE_FILE" ]; then
+        sed -i 's/.*\"template\":.*/\"template\": [\"uridecodebin name=source\",/g' $PIPELINE_FILE
+      else
+        echo "--src-ipcam expects pipeline file given first"
+        exit 1
+      fi
+      ;;
+    --src-scale)
+      if [ -n "$2" ] && [ -f "$PIPELINE_FILE" ]; then
+        string=$2
+        array=(`echo $string | tr 'x' ' '`)
+        sed -i "s/\".*videoscale.*/\" ! videoscale ! video\/x-raw,width=${array[0]},height=${array[1]}\",/g" $PIPELINE_FILE
+        shift
+      else
+        echo "--src-scale expects pipeline file path and pipeline file should given first"
+        exit 1
+      fi
+      ;;
     *)
       ;;
   esac

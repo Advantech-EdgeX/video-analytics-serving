@@ -10,7 +10,7 @@ SAMPLES_DIR=$(dirname $SCRIPT_DIR)
 ROOT_DIR=$(dirname $SAMPLES_DIR)
 
 PIPELINE=object_detection/record_frames
-MEDIA=/dev/video0
+MEDIA=rtsp://admin:admin@172.22.24.150/multimedia/video2
 BROKER_ADDR=localhost
 BROKER_PORT=1883
 TOPIC=vaserving

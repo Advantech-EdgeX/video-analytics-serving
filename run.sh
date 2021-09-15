@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo ./samples/record_frames/run_server.sh --frame-store samples/record_frames/frame_store
+sudo ./samples/record_frames/run_server.sh --frame-store samples/record_frames/frame_store --pipeline samples/record_frames/pipelines/object_detection/record_frames/pipeline.json --src-webcam --src-scale 1920x1080
 
 while [ -z `sudo lsof -i:7878` ]; do
     echo "The server side does not exist on port 7878, waiting for ready..."
