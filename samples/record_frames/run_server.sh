@@ -38,11 +38,11 @@ while [[ "$#" -gt 0 ]]; do
         exit 1
       fi
       ;;
-    --src-ipcam)
+    --src-ipcam | --src-file | --src-http)
       if [ -f "$PIPELINE_FILE" ]; then
         sed -i 's/.*\"template\":.*/\"template\": [\"uridecodebin name=source\",/g' $PIPELINE_FILE
       else
-        echo "--src-ipcam expects pipeline file given first"
+        echo "$1 expects pipeline file given first"
         exit 1
       fi
       ;;
