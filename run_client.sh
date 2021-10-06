@@ -6,17 +6,30 @@
 #
 
 SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
-
-PIPELINE=object_detection/person_vehicle_bike
-#MEDIA=rtsp://admin:admin@172.22.24.162/multimedia/video2
-#MEDIA=file:///home/video-analytics-serving/pipelines/person-bicycle-car-detection.mp4
-MEDIA=https://github.com/intel-iot-devkit/sample-videos/blob/master/car-detection.mp4?raw=true
 BROKER_ADDR=localhost
 BROKER_PORT=1883
 TOPIC=vaserving
 
 while [[ "$#" -gt 0 ]]; do
   case $1 in
+    --pipeline-cata)
+      if [ "$2" ]; then
+        PIPELINE_CATA=$2
+        shift
+      else
+        echo "--pipeline_cata expects a value"
+        exit 1
+      fi
+      ;;
+    --media)
+      if [ "$2" ]; then
+        MEDIA=$2
+        shift
+      else
+        echo "--media expects a value"
+        exit 1
+      fi
+      ;;
     *)
       ;;
   esac
@@ -24,6 +37,6 @@ while [[ "$#" -gt 0 ]]; do
   shift
 done
 
-$SCRIPT_DIR/vaclient/vaclient.sh start $PIPELINE $MEDIA \
+$SCRIPT_DIR/vaclient/vaclient.sh start $PIPELINE_CATA $MEDIA \
    --rtsp-path vaserving \
    --destination type mqtt --destination host $BROKER_ADDR:$BROKER_PORT --destination topic $TOPIC

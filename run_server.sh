@@ -23,7 +23,7 @@ while [[ "$#" -gt 0 ]]; do
       ;;
     --src-webcam)
       if [ -f "$PIPELINE_FILE" ]; then
-              sed -i 's/.*\"template\":.*/\"template\": [\"v4l2src name=source ! videoconvert name=videoconvert\",/g' $PIPELINE_FILE
+        sed -i 's/.*\"template\":.*/\"template\": [\"v4l2src name=source ! videoconvert name=videoconvert\",/g' $PIPELINE_FILE
       else
         echo "--src-webcam expects pipeline file given first"
         exit 1
@@ -49,6 +49,7 @@ while [[ "$#" -gt 0 ]]; do
       fi
       ;;
     *)
+      ARGS+="$1 "
       ;;
   esac
 
@@ -56,4 +57,6 @@ while [[ "$#" -gt 0 ]]; do
 done
 
 VOLUME_MOUNT+="-v /tmp:/tmp "
-"$SCRIPT_DIR/docker/run.sh"  --network host --privileged -v /dev:/dev --models models --pipelines $SCRIPT_DIR/pipelines/gstreamer $VOLUME_MOUNT --enable-rtsp "$@"
+ARGS=$(echo "$ARGS" | xargs)
+echo "$SCRIPT_DIR/docker/run.sh" --network host --privileged -v /dev:/dev --models models --pipelines $SCRIPT_DIR/pipelines/gstreamer $VOLUME_MOUNT --enable-rtsp "$ARGS"
+"$SCRIPT_DIR/docker/run.sh" --network host --privileged -v /dev:/dev --models models --pipelines $SCRIPT_DIR/pipelines/gstreamer $VOLUME_MOUNT --enable-rtsp "$ARGS"
