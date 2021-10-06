@@ -9,8 +9,6 @@ SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
 SAMPLES_DIR=$(dirname $SCRIPT_DIR)
 ROOT_DIR=$(dirname $SAMPLES_DIR)
 
-PIPELINE=object_detection/record_frames
-MEDIA=rtsp://admin:admin@172.22.24.150/multimedia/video2
 BROKER_ADDR=localhost
 BROKER_PORT=1883
 TOPIC=vaserving
@@ -24,6 +22,24 @@ while [[ "$#" -gt 0 ]]; do
         shift
       else
         echo "--frame-store expects a value"
+        exit 1
+      fi
+      ;;
+    --pipeline-cata)
+      if [ "$2" ]; then
+        PIPELINE=$2
+        shift
+      else
+        echo "--pipeline_cata expects a value"
+        exit 1
+      fi
+      ;;
+    --media)
+      if [ "$2" ]; then
+        MEDIA=$2
+        shift
+      else
+        echo "--media expects a value"
         exit 1
       fi
       ;;

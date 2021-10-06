@@ -58,6 +58,7 @@ while [[ "$#" -gt 0 ]]; do
       fi
       ;;
     *)
+      ARGS+="$1 "
       ;;
   esac
 
@@ -74,4 +75,7 @@ chmod -R a+rwx $FRAME_STORE
 rm -f $FRAME_STORE/*
 VOLUME_MOUNT+="-v $SCRIPT_DIR/extensions:/home/video-analytics-serving/extensions "
 VOLUME_MOUNT+="-v $FRAME_STORE:$FRAME_STORE "
-"$ROOT_DIR/docker/run.sh" --detach --network host --privileged -v /dev:/dev --models models --pipelines $SCRIPT_DIR/pipelines $VOLUME_MOUNT --enable-rtsp "$@"
+VOLUME_MOUNT+="-v /tmp:/tmp "
+ARGS=$(echo "$ARGS" | xargs)
+echo "$ROOT_DIR/docker/run.sh" --network host --privileged -v /dev:/dev --models models --pipelines $SCRIPT_DIR/pipelines $VOLUME_MOUNT --enable-rtsp "$ARGS"
+"$ROOT_DIR/docker/run.sh" --network host --privileged -v /dev:/dev --models models --pipelines $SCRIPT_DIR/pipelines $VOLUME_MOUNT --enable-rtsp "$ARGS"

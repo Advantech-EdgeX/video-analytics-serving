@@ -5,7 +5,8 @@ CONTAINER="video-analytics-serving-gstreamer"
 DETACH="--detach"
 PIPELINE_TYPE_PATH="pipelines/gstreamer"
 PIPELINE_CATA_PATH="object_detection/person_vehicle_bike"
-PIPELINE_FILE="pipeline.json"
+SOURCE_TYPE="--src-webcam"
+SOURCE_SCALE="--src-scale 1920x1080"
 
 MEDIA=rtsp://admin:admin@172.22.24.162/multimedia/video2
 #MEDIA=file:///tmp/person-bicycle-car-detection.mp4
@@ -34,28 +35,41 @@ while [[ "$#" -gt 0 ]]; do
 			fi
 			exit 1
 			;;
+		record_frames)
+			SAMPLE=1
+			SAMPLE_DIR="samples/record_frames"
+			PIPELINE_CATA_PATH="object_detection/record_frames"
+			;;
 		*)
+			echo "illeagle parameter"
+			exit 1
 			;;
 	esac
 	shift
 done
 
-echo ./run_server.sh --pipeline "${PIPELINE_TYPE_PATH}/${PIPELINE_CATA_PATH}/${PIPELINE_FILE}" --src-webcam --src-scale 1920x1080 "$DETACH"
-./run_server.sh --pipeline "${PIPELINE_TYPE_PATH}/${PIPELINE_CATA_PATH}/${PIPELINE_FILE}" --src-webcam --src-scale 1920x1080 "$DETACH"
+if [ "$SAMPLE" -eq 1 ]; then
+	CMD="${SAMPLE_DIR}/run_server.sh --frame-store ${SAMPLE_DIR}/frame_store --pipeline ${SAMPLE_DIR}/pipelines/${PIPELINE_CATA_PATH}/pipeline.json ${SOURCE_TYPE} ${SOURCE_SCALE} ${DETACH}"
+else
+	CMD="./run_server.sh --pipeline ${PIPELINE_TYPE_PATH}/${PIPELINE_CATA_PATH}/pipeline.json ${SOURCE_TYPE} ${SOURCE_SCALE} ${DETACH}"
+fi
+echo $CMD
+eval $CMD
 
-CMD="docker stats --no-stream video-analytics-serving-gstreamer"
-eval $CMD >/dev/null 2>&1
-while [ $? -ne 0 ]; do
-	echo -n .
-	sleep 1
-	eval $CMD >/dev/null 2>&1
+ret=$(lsof -i:7878)
+while [ -z "$ret" ]; do
+    echo "The server side does not exist on port 7878, waiting for ready..."
+    sleep 1
+    ret=$(lsof -i:7878)
 done
-# while [ -z `sudo lsof -i:7878` ]; do
-#     echo "The server side does not exist on port 7878, waiting for ready..."
-#     sleep 1
-# done
-# echo "Port 7878 has already been in use by the server side."
-# echo "Start to run the client side of video-inference."
+echo "Port 7878 has already been in use by the server side."
+echo "Start to run the client side of video-inference."
 
-echo ./run_client.sh --pipeline-cata "$PIPELINE_CATA_PATH" --media "$MEDIA"
-./run_client.sh --pipeline-cata "$PIPELINE_CATA_PATH" --media "$MEDIA"
+if [ "$SAMPLE" -eq 1 ]; then
+	CMD="./${SAMPLE_DIR}/run_client.sh --frame-store ${SAMPLE_DIR}/frame_store --pipeline-cata $PIPELINE_CATA_PATH --media $MEDIA"
+else
+	CMD="./run_client.sh --pipeline-cata $PIPELINE_CATA_PATH --media $MEDIA"
+fi
+
+echo $CMD
+eval $CMD
