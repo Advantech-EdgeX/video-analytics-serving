@@ -1,6 +1,7 @@
 {
 	"type": "GStreamer",
 	"template": ["uridecodebin name=source",
+        " ! videoscale ! video/x-raw,width=1920,height=1080",
 				" ! gvadetect model={models[object_detection][person_vehicle_bike][network]} name=detection",
 				" ! gvapython name=object-zone-count class=ObjectZoneCount module=/home/video-analytics-serving/extensions/spatial_analytics/object_zone_count.py",
 				" ! gvametaconvert name=metaconvert",
