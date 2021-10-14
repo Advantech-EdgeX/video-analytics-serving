@@ -6,8 +6,8 @@
 #
 
 SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
-BROKER_ADDR=localhost
-BROKER_PORT=1883
+MQTT_ADDR=127.0.0.1
+MQTT_PORT=1883
 TOPIC=vaserving
 
 while [[ "$#" -gt 0 ]]; do
@@ -30,6 +30,24 @@ while [[ "$#" -gt 0 ]]; do
         exit 1
       fi
       ;;
+    --mqtt-addr)
+      if [ "$2" ]; then
+        MQTT_ADDR=$2
+        shift
+      else
+        echo "--mqtt-addr expects a value"
+        exit 1
+      fi
+      ;;
+    --mqtt-port)
+      if [ "$2" ]; then
+        MQTT_PORT=$2
+        shift
+      else
+        echo "--mqtt-port expects a value"
+        exit 1
+      fi
+      ;;
     *)
       ;;
   esac
@@ -39,4 +57,4 @@ done
 
 $SCRIPT_DIR/vaclient/vaclient.sh start $PIPELINE_CATA $MEDIA \
    --rtsp-path vaserving \
-   --destination type mqtt --destination host $BROKER_ADDR:$BROKER_PORT --destination topic $TOPIC
+   --destination type mqtt --destination host ${MQTT_ADDR}:${MQTT_PORT} --destination topic $TOPIC

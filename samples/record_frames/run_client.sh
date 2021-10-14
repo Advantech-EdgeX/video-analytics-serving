@@ -8,9 +8,8 @@
 SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
 SAMPLES_DIR=$(dirname $SCRIPT_DIR)
 ROOT_DIR=$(dirname $SAMPLES_DIR)
-
-BROKER_ADDR=localhost
-BROKER_PORT=1883
+MQTT_ADDR=127.0.0.1
+MQTT_PORT=1883
 TOPIC=vaserving
 SPECIFIER="%08d"
 
@@ -43,6 +42,24 @@ while [[ "$#" -gt 0 ]]; do
         exit 1
       fi
       ;;
+    --mqtt-addr)
+      if [ "$2" ]; then
+        MQTT_ADDR=$2
+        shift
+      else
+        echo "--mqtt-addr expects a value"
+        exit 1
+      fi
+      ;;
+    --mqtt-port)
+      if [ "$2" ]; then
+        MQTT_PORT=$2
+        shift
+      else
+        echo "--mqtt-port expects a value"
+         exit 1
+      fi
+      ;;
     *)
       ;;
   esac
@@ -58,8 +75,8 @@ fi
 FILE_LOCATION=$FRAME_STORE/$SPECIFIER.jpg
 $ROOT_DIR/vaclient/vaclient.sh start $PIPELINE $MEDIA \
    --rtsp-path vaserving \
-   --destination type mqtt --destination host $BROKER_ADDR:$BROKER_PORT --destination topic $TOPIC \
+   --destination type mqtt --destination host ${MQTT_ADDR}:${MQTT_PORT} --destination topic $TOPIC \
    --parameter file-location $FILE_LOCATION
 echo Frame store file location = $FILE_LOCATION
 echo Starting mqtt client
-python3 $SCRIPT_DIR/mqtt_client.py --broker-address $BROKER_ADDR --broker-port $BROKER_PORT --frame-store-template $FILE_LOCATION
+python3 $SCRIPT_DIR/mqtt_client.py --broker-address $MQTT_ADDR --broker-port $MQTT_PORT --frame-store-template $FILE_LOCATION

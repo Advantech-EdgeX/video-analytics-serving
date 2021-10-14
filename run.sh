@@ -1,6 +1,7 @@
 #!/bin/bash
 
 SERVER_PORT=7878
+MQTT_ADDR=127.0.0.1
 MQTT_PORT=1883
 CONTAINER="video-analytics-serving-gstreamer"
 DETACH="--detach"
@@ -27,9 +28,9 @@ run_client() {
 	echo "To run video-inference client"
 
 	if [ -n "$SAMPLE" ] && [ "$SAMPLE" -eq 1 ]; then
-		cmd="./${SAMPLE_DIR}/run_client.sh --frame-store ${SAMPLE_DIR}/frame_store --pipeline-cata $PIPELINE_CATA_PATH --media $MEDIA"
+		cmd="./${SAMPLE_DIR}/run_client.sh --mqtt-addr ${MQTT_ADDR} --mqtt-port ${MQTT_PORT} --frame-store ${SAMPLE_DIR}/frame_store --pipeline-cata $PIPELINE_CATA_PATH --media $MEDIA"
 	else
-		cmd="./run_client.sh --pipeline-cata $PIPELINE_CATA_PATH --media $MEDIA"
+		cmd="./run_client.sh --mqtt-addr ${MQTT_ADDR} --mqtt-port ${MQTT_PORT} --pipeline-cata $PIPELINE_CATA_PATH --media $MEDIA"
 	fi
 
 	echo $cmd
@@ -81,13 +82,13 @@ if [ -n "$FLAG_CLIENT" ] && [ "$FLAG_CLIENT" -eq 1 ]; then
 fi
 
 # check if mqtt broker running
-ret=$(sudo lsof -i:$MQTT_PORT)
-while [ -z "$ret" ]; do
-	echo "The mqtt broker does not exist on port $MQTT_PORT, waiting for ready..."
+</dev/tcp/${MQTT_ADDR}/${MQTT_PORT}
+while [ "$?" -ne 0 ]; do
+	echo "Connection to mqtt broker on ${MQTT_ADDR}:${MQTT_PORT} failed."
 	sleep 3
-	ret=$(lsof -i:$MQTT_PORT)
+	</dev/tcp/${MQTT_ADDR}/${MQTT_PORT}
 done
-echo "Port $MQTT_PORT has already been in use by mqtt broker"
+echo "Connection to mqtt broker on ${MQTT_ADDR}:${MQTT_PORT} succeeded."
 echo "To run video-inference server."
 
 if [ -n "$SAMPLE" ] && [ "$SAMPLE" -eq 1 ]; then
