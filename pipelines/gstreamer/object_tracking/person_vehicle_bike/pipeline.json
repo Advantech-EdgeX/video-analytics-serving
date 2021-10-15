@@ -2,12 +2,12 @@
 	"type": "GStreamer",
 	"template": ["uridecodebin name=source",
         " ! videoscale ! video/x-raw,width=1920,height=1080",
-				" ! gvadetect model={models[object_detection][person_vehicle_bike][network]} name=detection",
+				" ! gvadetect model={models[object_detection][person_vehicle_bike_1016][network]} name=detection",
 				" ! gvatrack name=tracking",
 				" ! gvaclassify model={models[object_classification][vehicle_attributes][network]} name=classification",
 				" ! gvametaconvert name=metaconvert ! gvametapublish name=destination",
 				" ! appsink name=appsink"],
-	"description": "Person Vehicle Bike Detection wth Tracking and Vehicle Attributes Classification based on person-vehicle-bike-detection-crossroad-0078 and vehicle-attributes-recognition-barrier-0039",
+	"description": "Person Vehicle Bike Detection wth Tracking and Vehicle Attributes Classification based on person-vehicle-bike-detection-crossroad-1016 and vehicle-attributes-recognition-barrier-0039",
 	"parameters": {
 		"type": "object",
 		"properties": {

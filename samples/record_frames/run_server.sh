@@ -57,6 +57,24 @@ while [[ "$#" -gt 0 ]]; do
         exit 1
       fi
       ;;
+    --model-type)
+      if [ -n "$2" ]; then
+        MODEL_TYPE=$2
+        shift
+      else
+        echo "--model-type expects a value"
+        exit 1
+      fi
+      ;;
+    --model-name)
+      if [ -n "$2" ]; then
+        MODEL_NAME=$2
+        shift
+      else
+        echo "--model-name expects a value"
+        exit 1
+      fi
+      ;;
     *)
       ARGS+="$1 "
       ;;
@@ -68,6 +86,13 @@ done
 if [ -z $FRAME_STORE ]; then
    echo Frame store path not specified
    exit 1
+fi
+
+if [ -n "$MODEL_TYPE" ] && [ -n "$MODEL_NAME" ] && [ -f "$PIPELINE_FILE" ]; then
+        sed -i "s/.*\" ! gvadetect model={models.*/\" ! gvadetect model={models[${MODEL_TYPE}][${MODEL_NAME}][network]} name=detection\",/g" $PIPELINE_FILE
+else
+	echo "No model type or name given, or pipeline file not exist!!!"
+	exit 1
 fi
 
 mkdir -p $FRAME_STORE

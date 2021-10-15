@@ -12,6 +12,7 @@ MQTT_ADDR=127.0.0.1
 MQTT_PORT=1883
 TOPIC=vaserving
 SPECIFIER="%08d"
+DEVICE=CPU
 
 while [[ "$#" -gt 0 ]]; do
   case $1 in
@@ -24,12 +25,12 @@ while [[ "$#" -gt 0 ]]; do
         exit 1
       fi
       ;;
-    --pipeline-cata)
+    --pipeline-kind)
       if [ "$2" ]; then
-        PIPELINE=$2
+        PIPELINE_KIND=$2
         shift
       else
-        echo "--pipeline_cata expects a value"
+        echo "--pipeline-kind expects a value"
         exit 1
       fi
       ;;
@@ -60,6 +61,15 @@ while [[ "$#" -gt 0 ]]; do
          exit 1
       fi
       ;;
+    --device)
+      if [ "$2" ]; then
+        DEVICE=$2
+        shift
+      else
+        echo "--device expects a value"
+        exit 1
+      fi
+      ;;
     *)
       ;;
   esac
@@ -73,10 +83,11 @@ if [ -z $FRAME_STORE ]; then
 fi
 
 FILE_LOCATION=$FRAME_STORE/$SPECIFIER.jpg
-$ROOT_DIR/vaclient/vaclient.sh start $PIPELINE $MEDIA \
+$ROOT_DIR/vaclient/vaclient.sh start $PIPELINE_KIND $MEDIA \
    --rtsp-path vaserving \
-   --destination type mqtt --destination host ${MQTT_ADDR}:${MQTT_PORT} --destination topic $TOPIC \
-   --parameter file-location $FILE_LOCATION
+   --parameter detection-device $DEVICE \
+   --parameter file-location $FILE_LOCATION \
+   --destination type mqtt --destination host ${MQTT_ADDR}:${MQTT_PORT} --destination topic $TOPIC
 echo Frame store file location = $FILE_LOCATION
 echo Starting mqtt client
 python3 $SCRIPT_DIR/mqtt_client.py --broker-address $MQTT_ADDR --broker-port $MQTT_PORT --frame-store-template $FILE_LOCATION

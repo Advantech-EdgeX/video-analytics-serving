@@ -9,15 +9,16 @@ SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
 MQTT_ADDR=127.0.0.1
 MQTT_PORT=1883
 TOPIC=vaserving
+DEVICE=CPU
 
 while [[ "$#" -gt 0 ]]; do
   case $1 in
-    --pipeline-cata)
+    --pipeline-kind)
       if [ "$2" ]; then
-        PIPELINE_CATA=$2
+        PIPELINE_KIND=$2
         shift
       else
-        echo "--pipeline_cata expects a value"
+        echo "--pipeline-kind expects a value"
         exit 1
       fi
       ;;
@@ -48,6 +49,15 @@ while [[ "$#" -gt 0 ]]; do
         exit 1
       fi
       ;;
+    --device)
+      if [ "$2" ]; then
+        DEVICE=$2
+        shift
+      else
+        echo "--device expects a value"
+        exit 1
+      fi
+      ;;
     *)
       ;;
   esac
@@ -55,6 +65,8 @@ while [[ "$#" -gt 0 ]]; do
   shift
 done
 
-$SCRIPT_DIR/vaclient/vaclient.sh start $PIPELINE_CATA $MEDIA \
+$SCRIPT_DIR/vaclient/vaclient.sh start $PIPELINE_KIND $MEDIA \
    --rtsp-path vaserving \
+   --parameter detection-device $DEVICE \
    --destination type mqtt --destination host ${MQTT_ADDR}:${MQTT_PORT} --destination topic $TOPIC
+

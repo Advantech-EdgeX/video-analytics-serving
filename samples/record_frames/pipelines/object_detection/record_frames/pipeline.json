@@ -15,10 +15,13 @@
 	"parameters": {
 		"type": "object",
 		"properties": {
-			"detection-device": {
-				"element": "detection",
-				"type": "string"
-			},
+      "detection-device": {
+        "element": {
+          "name": "detection",
+          "property": "device"
+        },
+        "type": "string"
+      },
 			"inference-interval": {
 				"element": "detection",
 				"type": "integer"

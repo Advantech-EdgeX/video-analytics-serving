@@ -1,4 +1,21 @@
 - model: person-vehicle-bike-detection-crossroad-1016
   alias: object_detection
-  version: person_vehicle_bike
+  version: person_vehicle_bike_1016
+  precision: [FP16,FP32]
+- model: yolo-v4-tf
+  alias: object_detection
+  version: yolo_v4_tf
+  precision: [FP16,FP32]
+- model: face-detection-retail-0005
+  alias: object_detection
+  version: face_detection_retail_0005
+  precision: [FP16,FP32]
+- model: action-recognition-0001-decoder
+  alias: action_recognition
+  version: decoder
+  precision: [FP16,FP32]
+  model-proc: action-recognition-0001.json
+- model: action-recognition-0001-encoder
+  alias: action_recognition
+  version: encoder
   precision: [FP16,FP32]

@@ -2,11 +2,12 @@
 	"type": "GStreamer",
 	"template": ["uridecodebin name=source",
         " ! videoscale ! video/x-raw,width=1920,height=1080",
+        " ! videoconvert name=videoconvert",
 				" ! gvadetect model={models[object_detection][person_vehicle_bike][network]} name=detection",
 				" ! gvametaconvert name=metaconvert ! gvametapublish name=destination",
 				" ! appsink name=appsink"
 			],
-	"description": "Person Vehicle Bike Detection based on person-vehicle-bike-detection-crossroad-0078",
+	"description": "Person Vehicle Bike Detection based on person-vehicle-bike-detection-crossroad",
 	"parameters": {
 		"type": "object",
 		"properties": {

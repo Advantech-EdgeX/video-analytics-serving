@@ -23,7 +23,7 @@ while [[ "$#" -gt 0 ]]; do
       ;;
     --src-webcam)
       if [ -f "$PIPELINE_FILE" ]; then
-        sed -i 's/.*\"template\":.*/\"template\": [\"v4l2src name=source ! videoconvert name=videoconvert\",/g' $PIPELINE_FILE
+        sed -i 's/.*\"template\":.*/\"template\": [\"v4l2src name=source\",/g' $PIPELINE_FILE
       else
         echo "--src-webcam expects pipeline file given first"
         exit 1
@@ -48,6 +48,24 @@ while [[ "$#" -gt 0 ]]; do
         exit 1
       fi
       ;;
+    --model-type)
+      if [ -n "$2" ]; then
+        MODEL_TYPE=$2
+        shift
+      else
+        echo "--model-type expects a value"
+        exit 1
+      fi
+      ;;
+    --model-name)
+      if [ -n "$2" ]; then
+        MODEL_NAME=$2
+        shift
+      else
+        echo "--model-name expects a value"
+        exit 1
+      fi
+      ;;
     *)
       ARGS+="$1 "
       ;;
@@ -55,6 +73,13 @@ while [[ "$#" -gt 0 ]]; do
 
   shift
 done
+
+if [ -n "$MODEL_TYPE" ] && [ -n "$MODEL_NAME" ] && [ -f "$PIPELINE_FILE" ]; then
+        sed -i "s/.*\" ! gvadetect model={models.*/\" ! gvadetect model={models[${MODEL_TYPE}][${MODEL_NAME}][network]} name=detection\",/g" $PIPELINE_FILE
+else
+	echo "No model type or name given, or pipeline file not exist!!!"
+	exit 1
+fi
 
 VOLUME_MOUNT+="-v /tmp:/tmp "
 ARGS=$(echo "$ARGS" | xargs)

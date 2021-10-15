@@ -48,6 +48,7 @@ RUN if [[ ${VA_SERVING_BASE} == *"openvino/ubuntu20_data_runtime:2021.2" ]]; the
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     apt-get upgrade -y -q && \
     apt-get dist-upgrade -y -q && \
+    apt-get install libboost-program-options1.71.0 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* ;
 
