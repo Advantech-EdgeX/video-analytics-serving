@@ -101,6 +101,7 @@ rm -f $FRAME_STORE/*
 VOLUME_MOUNT+="-v $SCRIPT_DIR/extensions:/home/video-analytics-serving/extensions "
 VOLUME_MOUNT+="-v $FRAME_STORE:$FRAME_STORE "
 VOLUME_MOUNT+="-v /tmp:/tmp "
+VOLUME_MOUNT+="-v $ROOT_DIR:/vas "
 ARGS=$(echo "$ARGS" | xargs)
 echo "$ROOT_DIR/docker/run.sh" --network host --privileged -v /dev:/dev --models models --pipelines $SCRIPT_DIR/pipelines $VOLUME_MOUNT --enable-rtsp "$ARGS"
 "$ROOT_DIR/docker/run.sh" --network host --privileged -v /dev:/dev --models models --pipelines $SCRIPT_DIR/pipelines $VOLUME_MOUNT --enable-rtsp "$ARGS"

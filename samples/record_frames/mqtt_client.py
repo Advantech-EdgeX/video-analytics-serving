@@ -15,6 +15,9 @@ import os
 import time
 import subprocess
 # import shlex
+# import pathlib
+from urllib.parse import urlparse
+import socket
 
 # person-vehicle-bike-detection-crossroad-1016 inference output example
 #{'detection':
@@ -40,6 +43,47 @@ debug = 1
 wait_sec_record_frame = (100000/1000000.0)
 confidence_threshold_default=0.530
 send_image_script_name = "img_send.sh"
+run_conf = "run.conf"
+
+def get_ip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.settimeout(0)
+    try:
+        # doesn't even have to be reachable
+        s.connect(('10.255.255.255', 1))
+        IP = s.getsockname()[0]
+    except Exception:
+        IP = '127.0.0.1'
+    finally:
+        s.close()
+    return IP
+
+def parse_run_conf():
+    global source_type, media, camip, camport
+    source_type = ""
+    media = ""
+    camip = "127.0.0.1"
+    camport = 80
+    myvars = {}
+    # print("current path {}".format(pathlib.Path().resolve()))
+    with open(run_conf) as myfile:
+        for line in myfile:
+            name, var = line.partition("=")[::2]
+            # myvars[name.strip()] = var.strip()
+            if "SOURCE_TYPE" == name.strip():
+                source_type = var.strip().strip('\"')[6:]
+            elif "MEDIA" == name.strip():
+                media = var.strip().strip('\"')
+        if media == "" or source_type != "ipcam":
+            camip = get_ip()
+            camport = 7880
+        elif source_type == "ipcam":
+            o = urlparse(media)
+            camip = o.hostname
+            if o.port:
+                camport = o.port
+            else:
+                camport = 80
 
 def to_base64(img):
     return base64.b64encode(img).decode('ascii')
@@ -111,7 +155,12 @@ def on_message(_unused_client, user_data, msg):
 
                         client_pub = mqtt.Client("P1")
                         client_pub.connect(args.broker_address, args.broker_port)
-                        client_pub.publish(args.topic, msg.payload)
+                        result['camtype'] = source_type
+                        result['camurl'] = 'http://' + camip + ':' + str(camport)
+                        result['reason'] = 'detect ' + obj["detection"]["label"]
+                        # args.topic = AnalyticsData
+                        # print("args.topic {}".format(args.topic))
+                        client_pub.publish(args.topic, json.dumps(result))
 
                         img_send(frame_path + ".txt")
                     elif debug > 0:
@@ -151,7 +200,7 @@ def get_arguments():
                         type=str,
                         required=True,
                         help='Frame store file name template')
-    parser.add_argument('--confidence_threshold',
+    parser.add_argument('--confidence-threshold',
                         action='store',
                         type=float,
                         default=confidence_threshold_default,
@@ -160,6 +209,9 @@ def get_arguments():
 
 if __name__ == "__main__":
     args = get_arguments()
+    parse_run_conf()
+    print("source_type {}".format(source_type))
+    print("camip:port {}:{}".format(camip, camport))
     client = mqtt.Client("VA Serving Frame Retrieval", userdata=args)
     client.on_connect = on_connect
     client.on_message = on_message
