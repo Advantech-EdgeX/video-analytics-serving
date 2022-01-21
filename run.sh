@@ -5,6 +5,7 @@ source run.conf
 run_client() {
 	local ret
 	local cmd
+	local s
 
 	ret=$(sudo lsof -i:$VAS_SERVER_PORT)
 	while [ -z "$ret" ]; do
@@ -16,8 +17,9 @@ run_client() {
 	echo "To run video-inference client"
 
 	[ "$SOURCE_TYPE" = "--src-webcam" ] && MEDIA="uri://webcam"
+	[ -n "$CONFIDENCE_THRESHOLD" ] && s="--confidence-threshold $CONFIDENCE_THRESHOLD"
 	if [ -n "$SAMPLE" ] && [ "$SAMPLE" -eq 1 ]; then
-		cmd="./${SAMPLE_DIR}/run_client.sh --mqtt-addr ${MQTT_ADDR} --mqtt-port ${MQTT_PORT} --frame-store ${SAMPLE_DIR}/frame_store --pipeline-kind $PIPELINE_KIND --media $MEDIA --device $DEVICE"
+		cmd="./${SAMPLE_DIR}/run_client.sh --mqtt-addr ${MQTT_ADDR} --mqtt-port ${MQTT_PORT} --frame-store ${SAMPLE_DIR}/frame_store --pipeline-kind $PIPELINE_KIND --media $MEDIA --device $DEVICE $s"
 	else
 		cmd="./run_client.sh --mqtt-addr ${MQTT_ADDR} --mqtt-port ${MQTT_PORT} --pipeline-kind $PIPELINE_KIND --media $MEDIA --device $DEVICE"
 	fi

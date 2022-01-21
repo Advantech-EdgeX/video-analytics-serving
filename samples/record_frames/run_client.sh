@@ -70,6 +70,14 @@ while [[ "$#" -gt 0 ]]; do
         exit 1
       fi
       ;;
+    --confidence-threshold)
+      if [ "$2" ]; then
+        CONF_THRE="--confidence-threshold $2"
+        shift
+      else
+        echo "$0 --confidence-threshold expects a value!!!"
+      fi
+      ;;
     *)
       ;;
   esac
@@ -90,4 +98,4 @@ $ROOT_DIR/vaclient/vaclient.sh start $PIPELINE_KIND $MEDIA \
    --destination type mqtt --destination host ${MQTT_ADDR}:${MQTT_PORT} --destination topic $TOPIC
 echo Frame store file location = $FILE_LOCATION
 echo Starting mqtt client
-python3 $SCRIPT_DIR/mqtt_client.py --broker-address $MQTT_ADDR --broker-port $MQTT_PORT --frame-store-template $FILE_LOCATION
+python3 $SCRIPT_DIR/mqtt_client.py --broker-address $MQTT_ADDR --broker-port $MQTT_PORT --frame-store-template $FILE_LOCATION $CONF_THRE
