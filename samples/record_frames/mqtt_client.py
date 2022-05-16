@@ -10,6 +10,8 @@ import json
 import paho.mqtt.client as mqtt
 import cv2
 from PIL import Image
+import rasterio
+from rasterio.enums import Resampling
 import base64,io
 import os
 import time
@@ -36,7 +38,7 @@ import socket
 vas_mqtt_topic = "vaserving"
 file_location = "host-file-location"
 object_type = 2
-scale = 0.3
+scale = 1
 intrude_ts = 0
 intrude_ti_us = 5000000000
 debug = 1
@@ -90,7 +92,7 @@ def to_base64(img):
 
 def img_resize(img, scale=1):
     height, width = img.size
-    return img.resize((int(height*scale), int(width*scale)), Image.BILINEAR)
+    return img.resize((int(height*scale), int(width*scale)), Resampling.bilinear)
 
 def img_process(img_file, txt_file):
     im = Image.open(img_file)
